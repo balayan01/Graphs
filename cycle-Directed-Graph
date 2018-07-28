@@ -1,0 +1,81 @@
+#include<iostream>
+#include <vector>
+#include <stack>
+using namespace std;
+
+vector <int> adj[100];
+bool visited[100];
+bool recStack[100];
+
+void dfs(int x)
+{
+    visited[x]=true;
+    cout<<x<<" ";
+    for(int i=0;i<adj[x].size();i++)
+    {
+        if(visited[adj[x][i]]==false)
+        dfs(adj[x][i]);
+    }
+}
+bool isCycleGraph(int v)
+{
+    visited[v]=true;
+    recStack[v]=true;
+    for(int i=0;i<adj[v].size();i++)
+    {
+        if(visited[adj[v][i]]==false and isCycleGraph(adj[v][i]))
+            return true;
+        else if(recStack[adj[v][i]]==true)
+            return true;
+    }
+    recStack[v]=false;
+    return false;
+}
+
+bool isCycle(int nodes)
+{
+    for(int i=0;i<nodes;i++)
+    {
+        if(isCycleGraph(i))
+        return true;
+    }
+    return false;
+}
+void initialize()
+{
+    for(int i=0;i<10;i++)
+    {
+        visited[i]=false;
+        recStack[i]=false;
+    }
+}
+
+int main()
+{
+    int x,y,nodes,edges;
+    cin>>nodes>>edges;
+    for(int i=0;i<edges;i++)
+    {
+        cin>>x>>y;
+        adj[x].push_back(y);
+        
+    }
+    initialize();
+    //for printing the adjacency list
+    /*for(int i=0;i<nodes;i++)
+    {
+        cout<<"adj list of node "<<i<<" : ";
+        for(int j=0;j<adj[i].size();j++)
+        {
+            if(j==adj[i].size()-1)
+            cout<<adj[i][j]<<endl;
+            else
+            cout<<adj[i][j]<<"-->";
+        }
+    }*/
+    if(isCycle(nodes))
+    cout<<"Graph contains a cycle";
+    else
+    cout<<"No cycle";
+    return 0;
+}
